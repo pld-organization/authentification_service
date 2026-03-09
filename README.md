@@ -1,98 +1,166 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🏥 AuthService — Système d'Authentification MediScan IA
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Service d'authentification pour la plateforme MediScan IA.
+Gère l'inscription, la connexion, les sessions et les profils des patients et médecins.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🛠️ Stack Technique
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+| Technologie | Utilisation |
+|-------------|-------------|
+| NestJS      | Framework Backend |
+| MySQL       | Base de données utilisateurs |
+| Redis (AOF) | Gestion des sessions |
+| Docker      | Conteneurisation |
+| JWT         | Tokens d'authentification |
+| Google OAuth2 | Connexion avec Google |
+| bcrypt      | Hashage des mots de passe |
 
-## Project setup
+---
 
-```bash
-$ npm install
+## 📁 Structure du Projet
+```
+auth-service/
+├── docker-compose.yml
+├── Dockerfile
+├── .env
+└── src/
+    ├── main.ts
+    ├── app.module.ts
+    ├── config/
+    │   ├── mysql.config.ts
+    │   ├── redis.config.ts
+    │   └── jwt.config.ts
+    ├── auth/
+    │   ├── auth.module.ts
+    │   ├── auth.controller.ts
+    │   ├── auth.service.ts
+    │   ├── jwt.strategy.ts
+    │   ├── google.strategy.ts
+    │   └── dto/
+    ├── users/
+    │   ├── users.module.ts
+    │   ├── users.service.ts
+    │   ├── user.entity.ts
+    │   ├── patient.entity.ts
+    │   ├── doctor.entity.ts
+    │   └── dto/
+    ├── session/
+    │   ├── session.module.ts
+    │   └── session.service.ts
+    └── common/
+        ├── role.enum.ts
+        ├── jwt-payload.interface.ts
+        └── hash.util.ts
 ```
 
-## Compile and run the project
+---
 
+## ⚙️ Installation
+
+### 1 — Cloner le projet
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/ton-repo/auth-service.git
+cd auth-service
 ```
 
-## Run tests
-
+### 2 — Configurer les variables d'environnement
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env
+# Remplis les valeurs dans .env
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### 3 — Lancer avec Docker
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Premier lancement
+docker-compose up --build
+
+# Lancements suivants
+docker-compose up
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## 🔑 Variables d'Environnement
+```env
+# App
+PORT=3000
 
-Check out a few resources that may come in handy when working with NestJS:
+# MySQL
+MYSQL_HOST=mysql
+MYSQL_PORT=3306
+MYSQL_ROOT_PASSWORD=
+MYSQL_DATABASE=authdb
+MYSQL_USER=
+MYSQL_PASSWORD=
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
 
-## Support
+# JWT
+JWT_SECRET=
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=
+JWT_REFRESH_EXPIRES_IN=7d
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Google OAuth
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=http://localhost:3000/auth/google/callback
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🚀 API Endpoints
 
-## License
+### Authentification
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| POST | `/auth/register` | Inscription |
+| POST | `/auth/login` | Connexion |
+| POST | `/auth/logout` | Déconnexion |
+| POST | `/auth/refresh` | Rafraîchir le token |
+| GET  | `/auth/google` | Connexion Google |
+| GET  | `/auth/google/callback` | Callback Google |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Profil
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/profile` | Consulter son profil |
+| PATCH | `/profile` | Modifier son profil |
+
+---
+
+## 👥 Acteurs
+
+| Rôle | Description |
+|------|-------------|
+| `PATIENT` | Utilisateur soumettant des analyses médicales |
+| `DOCTOR` | Médecin validant les certificats et consultations |
+
+---
+
+## 🔐 Sécurité
+
+- Mots de passe hashés avec **bcrypt**
+- Sessions stockées dans **Redis**
+- Tokens **JWT** (access 15min + refresh 7j)
+- Connexion **Google OAuth2**
+- Variables sensibles dans **`.env`** (jamais sur Git)
+
+---
+
+## 👨‍💻 Équipe
+
+| Nom | Rôle |
+|-----|------|
+| Zarifi Mohamed Abdelhadi | Chef de projet |
+| Sadoune Fadjr | Développeur |
+| Chikhaoui Ahmed Mahdi | Développeur |
+| Rebahi M'hamed Wassim | Développeur |
+| Bouldja Thiziri | Développeur |
+| Atmani Kenza | Développeur |
+
+---
